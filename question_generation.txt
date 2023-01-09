@@ -1,0 +1,32 @@
+def get_question(context,answer,model,tokenizer):
+  text = "context: {} answer: {}".format(context,answer)
+  encoding = tokenizer.encode_plus(text,max_length=384, pad_to_max_length=False,truncation=True, return_tensors="pt").to(device)
+  input_ids, attention_mask = encoding["input_ids"], encoding["attention_mask"]
+
+  outs = model.generate(input_ids=input_ids,
+                                  attention_mask=attention_mask,
+                                  early_stopping=True,
+                                  num_beams=5,
+                                  num_return_sequences=1,
+                                  no_repeat_ngram_size=2,
+                                  max_length=72)
+
+
+  dec = [tokenizer.decode(ids,skip_special_tokens=True) for ids in outs]
+
+
+  Question = dec[0].replace("question:","")
+  Question= Question.strip()
+  return Question
+
+
+
+for wrp in wrap(summarized_text, 150):
+  print (wrp)
+print ("\n")
+
+for answer in imp_keywords:
+  ques = get_question(summarized_text,answer,question_model,question_tokenizer)
+  print (ques)
+  print (answer.capitalize())
+  print ("\n")

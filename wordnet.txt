@@ -1,0 +1,28 @@
+from collections import OrderedDict
+from sklearn.metrics.pairwise import cosine_similarity
+
+
+def get_distractors_wordnet(word):
+    distractors=[]
+    try:
+      syn = wn.synsets(word,'n')[0]
+      
+      word= word.lower()
+      orig_word = word
+      if len(word.split())>0:
+          word = word.replace(" ","_")
+      hypernym = syn.hypernyms()
+      if len(hypernym) == 0: 
+          return distractors
+      for item in hypernym[0].hyponyms():
+          name = item.lemmas()[0].name()
+          #print ("name ",name, " word",orig_word)
+          if name == orig_word:
+              continue
+          name = name.replace("_"," ")
+          name = " ".join(w.capitalize() for w in name.split())
+          if name is not None and name not in distractors:
+              distractors.append(name)
+    except:
+      print ("Wordnet distractors not found")
+    return distractors

@@ -1,0 +1,19 @@
+from keybert import KeyBERT
+
+def get_keywords(originaltext,summarytext):
+  kw_model = KeyBERT()
+  keywords = kw_model.extract_keywords(originaltext)
+  keywords1 = kw_model.extract_keywords(summarytext)
+  keyword = []
+  keywords_found = []
+  for i in keywords:
+    keyword.append(i[0])
+  print("keywords unsummerized: ",keyword)
+  for i in keywords1:
+    keywords_found.append(i[0])
+  print("keywords_found in summerized: ",keywords_found)
+  return keywords_found
+
+  
+imp_keywords = get_keywords(text,summarized_text)
+print(imp_keywords)
